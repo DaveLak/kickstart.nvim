@@ -101,13 +101,13 @@ P.S. You can delete this when you're done too. It's your config now! :)
 -- Load core Neovim settings (options, globals)
 -- NOTE: `options.lua` must be loaded first to ensure `vim.g.mapleader` is set
 -- before other modules or plugins try to use it.
-require('kickstart.core.options')
+require 'kickstart.core.options'
 
 -- Load basic keymaps
-require('kickstart.core.keymaps')
+require 'kickstart.core.keymaps'
 
 -- Load basic autocommands
-require('kickstart.core.autocommands')
+require 'kickstart.core.autocommands'
 
 -- [[ Install `lazy.nvim` plugin manager ]]
 --    See `:help lazy.nvim.txt` or https://github.com/folke/lazy.nvim for more info
@@ -150,17 +150,17 @@ rtp:prepend(lazypath)
 --  If you prefer, you can also add your plugin specifications directly in this `lazy.setup` call.
 require('lazy').setup({
   -- Load plugin configurations from individual files in `lua/kickstart/plugins/`
-  require('kickstart.plugins.guess-indent'), -- Detects indentation settings automatically
-  require('kickstart.plugins.gitsigns'), -- Adds git related signs to the gutter
-  require('kickstart.plugins.which-key'), -- Shows pending keybinds
-  require('kickstart.plugins.telescope'), -- Fuzzy finder
-  require('kickstart.plugins.lsp'), -- Language Server Protocol configurations
-  require('kickstart.plugins.conform'), -- Auto-formatting
-  require('kickstart.plugins.completion'), -- Autocompletion setup
-  require('kickstart.plugins.colorscheme'), -- The colorscheme (tokyonight)
-  require('kickstart.plugins.todo-comments'), -- Highlights TODO, FIXME, etc.
-  require('kickstart.plugins.mini'), -- Collection of minimal Lua plugins
-  require('kickstart.plugins.treesitter'), -- Treesitter configuration for syntax highlighting, etc.
+  require 'kickstart.plugins.guess-indent', -- Detects indentation settings automatically
+  require 'kickstart.plugins.gitsigns', -- Adds git related signs to the gutter
+  require 'kickstart.plugins.which-key', -- Shows pending keybinds
+  require 'kickstart.plugins.telescope', -- Fuzzy finder
+  require 'kickstart.plugins.lsp', -- Language Server Protocol configurations
+  require 'kickstart.plugins.conform', -- Auto-formatting
+  require 'kickstart.plugins.completion', -- Autocompletion setup
+  require 'kickstart.plugins.colorscheme', -- The colorscheme (tokyonight)
+  require 'kickstart.plugins.todo-comments', -- Highlights TODO, FIXME, etc.
+  require 'kickstart.plugins.mini', -- Collection of minimal Lua plugins
+  require 'kickstart.plugins.treesitter', -- Treesitter configuration for syntax highlighting, etc.
 
   -- The following comments only work if you have downloaded the kickstart repo, not just copy pasted this
   -- init.lua file. If you want these files, they are in the repository, so you can just download them and
@@ -173,8 +173,8 @@ require('lazy').setup({
   --  See the README for more information on how to add plugins.
   --
   -- require 'kickstart.plugins.debug',
-  -- require 'kickstart.plugins.indent_line',
-  -- require 'kickstart.plugins.lint',
+  require 'kickstart.plugins.indent_line',
+  require 'kickstart.plugins.lint',
   -- require 'kickstart.plugins.autopairs',
   -- require 'kickstart.plugins.neo-tree',
   -- require 'kickstart.plugins.gitsigns', -- For more gitsigns configuration, see `lua/kickstart/plugins/gitsigns.lua`
