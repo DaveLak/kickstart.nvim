@@ -5,7 +5,7 @@
 A starting point for Neovim that is:
 
 * Small
-* Single-file
+* Modular (core and plugin configurations are split into logical files)
 * Completely Documented
 
 **NOT** a Neovim distribution, but instead a starting point for your configuration.
@@ -108,9 +108,14 @@ the current plugin status. Hit `q` to close the window.
 
 #### Read The Friendly Documentation
 
-Read through the `init.lua` file in your configuration folder for more
-information about extending and exploring Neovim. That also includes
-examples of adding popularly requested plugins.
+Read through the `init.lua` file and the files it loads (primarily in the
+`lua/kickstart/` directory) in your configuration folder for more
+information about extending and exploring Neovim. The main `init.lua` provides
+an overview and loads core settings and plugins, which have their configurations
+in `lua/kickstart/core/` and `lua/kickstart/plugins/` respectively.
+This modular structure helps in organizing settings and plugins as your
+configuration grows. The documentation also includes examples of adding
+popularly requested plugins.
 
 > [!NOTE]
 > For more information about a particular plugin check its repository's documentation.
@@ -139,17 +144,61 @@ examples of adding popularly requested plugins.
     distribution that you would like to try out.
 * What if I want to "uninstall" this configuration:
   * See [lazy.nvim uninstall](https://lazy.folke.io/usage#-uninstalling) information
-* Why is the kickstart `init.lua` a single file? Wouldn't it make sense to split it into multiple files?
-  * The main purpose of kickstart is to serve as a teaching tool and a reference
-    configuration that someone can easily use to `git clone` as a basis for their own.
-    As you progress in learning Neovim and Lua, you might consider splitting `init.lua`
-    into smaller parts. A fork of kickstart that does this while maintaining the
-    same functionality is available here:
-    * [kickstart-modular.nvim](https://github.com/dam9000/kickstart-modular.nvim)
-  * Discussions on this topic can be found here:
-    * [Restructure the configuration](https://github.com/nvim-lua/kickstart.nvim/issues/218)
-    * [Reorganize init.lua into a multi-file setup](https://github.com/nvim-lua/kickstart.nvim/pull/473)
-
+* How is the Kickstart configuration structured?
+  * Kickstart.nvim now adopts a modular structure by default. While it remains a
+    teaching tool and a reference configuration, this modularity is introduced
+    as a best practice for maintainability as your Neovim configuration grows.
+  * The structure is as follows:
+    * `init.lua`: This is still the main entry point for your Neovim configuration.
+      However, it now primarily focuses on loading different modules and orchestrating
+      the setup of core features and plugins. It's the place to get an overview of
+      what's being loaded.
+    * `lua/kickstart/core/`: This directory contains the base Neovim settings, broken
+      down into logical files:
+      * `options.lua`: General Neovim options (`vim.o` and `vim.g`).
+      * `keymaps.lua`: Core (non-plugin) key mappings.
+      * `autocommands.lua`: General (non-plugin) autocommands.
+    * `lua/kickstart/plugins/`: This directory holds the configurations for the
+      plugins that come with Kickstart. Each plugin, or a logical group of related
+      plugins, has its own Lua file (e.g., `telescope.lua`, `lsp.lua`). This makes it
+      easier to find and manage plugin settings.
+    * `lua/custom/plugins/`: This directory is the recommended place for *you* to
+      add your own unique plugins and their configurations. Kickstart can be configured
+      to automatically load Lua files from this directory (see the `import = 'custom.plugins'`
+      line in `init.lua`'s `lazy.setup` call). This keeps your personalizations separate
+      from the base Kickstart configuration, making updates easier.
+  * This modular approach makes it easier to understand, manage, and extend your
+    Neovim setup. You can easily find where specific settings or plugin configurations
+    are located.
+* How do I add a new plugin?
+  * **For personal use (recommended for most users):**
+    1. Create a new Lua file in the `lua/custom/plugins/` directory (e.g., `lua/custom/plugins/my-new-plugin.lua`).
+    2. In this file, return the plugin specification as required by `lazy.nvim`. For example:
+       ```lua
+       return {
+         'username/my-new-plugin.nvim',
+         -- Optional: add configuration like opts, event, dependencies, config function, etc.
+         opts = {},
+       }
+       ```
+    3. If you've uncommented the `{ import = 'custom.plugins' }` line in `init.lua`'s
+       `lazy.setup` call, `lazy.nvim` will automatically pick up and load your new plugin
+       file from `lua/custom/plugins/`.
+    4. If you prefer to load plugins explicitly, you can `require` your new plugin
+       configuration directly within the `plugins` table in `init.lua`'s `lazy.setup` call:
+       ```lua
+       -- In init.lua, inside the lazy.setup plugins table:
+       require('custom.plugins.my-new-plugin'),
+       ```
+  * **To suggest a plugin for Kickstart itself (core plugins):**
+    1. Create a new Lua file in `lua/kickstart/plugins/` (e.g., `lua/kickstart/plugins/new-core-plugin.lua`).
+    2. Add the plugin specification in this file, similar to the example above.
+    3. Then, add a `require` call for this new file in the main `init.lua` within the `lazy.setup` plugins table:
+       ```lua
+       -- In init.lua, inside the lazy.setup plugins table:
+       require('kickstart.plugins.new-core-plugin'),
+       ```
+    (This is typically for contributions back to the Kickstart project).
 ### Install Recipes
 
 Below you can find OS specific install instructions for Neovim and dependencies.

@@ -1,3 +1,4 @@
+-- Configures linting using nvim-lint.
 return {
 
   { -- Linting
