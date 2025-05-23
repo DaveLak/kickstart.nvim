@@ -6,9 +6,26 @@ return {
     event = { 'BufReadPre', 'BufNewFile' },
     config = function()
       local lint = require 'lint'
-      lint.linters_by_ft = {
-        markdown = { 'markdownlint' },
-      }
+      -- lint.linters_by_ft = {
+      --   markdown = { 'markdownlint' },
+      -- }
+
+      -- To allow other plugins to add linters to require('lint').linters_by_ft,
+      -- instead set linters_by_ft like this:
+      lint.linters_by_ft = lint.linters_by_ft or {}
+      lint.linters_by_ft.markdown = { 'markdownlint' } -- Or whatever was there
+
+      -- Add shellcheck
+      lint.linters_by_ft.sh = { 'shellcheck' }
+      lint.linters_by_ft.bash = { 'shellcheck' } -- Also for bash
+      lint.linters_by_ft.zsh = { 'shellcheck' } -- Also for zsh
+
+      -- Add eslint_d
+      lint.linters_by_ft.javascript = { 'eslint_d' }
+      lint.linters_by_ft.typescript = { 'eslint_d' }
+      lint.linters_by_ft.javascriptreact = { 'eslint_d' }
+      lint.linters_by_ft.typescriptreact = { 'eslint_d' }
+      lint.linters_by_ft.vue = { 'eslint_d' } -- Also for vue if desired
 
       -- To allow other plugins to add linters to require('lint').linters_by_ft,
       -- instead set linters_by_ft like this:

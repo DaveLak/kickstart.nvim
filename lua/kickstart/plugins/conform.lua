@@ -31,11 +31,24 @@ return {
     end,
     formatters_by_ft = {
       lua = { 'stylua' },
-      -- Conform can also run multiple formatters sequentially
-      -- python = { "isort", "black" },
-      --
-      -- You can use 'stop_after_first' to run the first available formatter from the list
-      -- javascript = { "prettierd", "prettier", stop_after_first = true },
+      python = { 'ruff_format' }, -- Use ruff for formatting Python
+
+      -- Configure prettier for web filetypes
+      -- Using prettierd for performance if available, falling back to prettier
+      javascript = { 'prettierd', 'prettier', stop_after_first = true },
+      typescript = { 'prettierd', 'prettier', stop_after_first = true },
+      javascriptreact = { 'prettierd', 'prettier', stop_after_first = true }, -- For JSX
+      typescriptreact = { 'prettierd', 'prettier', stop_after_first = true }, -- For TSX
+      vue = { 'prettierd', 'prettier', stop_after_first = true },
+      json = { 'prettierd', 'prettier', stop_after_first = true },
+      yaml = { 'prettierd', 'prettier', stop_after_first = true },
+      markdown = { 'prettierd', 'prettier', stop_after_first = true },
+      css = { 'prettierd', 'prettier', stop_after_first = true },
+      html = { 'prettierd', 'prettier', stop_after_first = true },
+      mdx = { 'prettierd', 'prettier', stop_after_first = true },
+      graphql = { 'prettierd', 'prettier', stop_after_first = true },
+      -- Example of multiple formatters if needed for other languages:
+      -- c = { "clang-format" },
     },
   },
 }

@@ -221,6 +221,27 @@ return {
         -- But for many setups, the LSP (`ts_ls`) will work just fine
         -- ts_ls = {},
         --
+        ts_ls = {
+          -- Optional: Disable tsserver formatting if using conform.nvim with prettier
+          settings = {
+            typescript = {
+              format = {
+                enable = false,
+              },
+            },
+            javascript = {
+              format = {
+                enable = false,
+              },
+            },
+          },
+          -- To use eslint_d for diagnostics and code actions instead of tsserver's built-in linting
+          -- you might need to configure it further, potentially using null-ls or a dedicated eslint plugin,
+          -- or by configuring tsserver to play nicely with external eslint.
+          -- For now, default tsserver diagnostics will be active alongside external eslint_d from nvim-lint.
+        },
+
+        emmetls = {}, -- Default configuration is usually fine
 
         lua_ls = {
           -- cmd = { ... },
@@ -254,6 +275,18 @@ return {
       local ensure_installed = vim.tbl_keys(servers or {})
       vim.list_extend(ensure_installed, {
         'stylua', -- Used to format Lua code
+        -- Add new tools here:
+        'shellcheck',
+        'eslint_d', -- Should already be here
+        'prettierd', -- Formatter for web files (daemonized version)
+        'ruff', -- Formatter and linter for Python
+        -- Add new tool here:
+        'lazygit',
+        -- Add LSP servers here if not covered by server keys:
+        'typescript-language-server',
+        'emmet-ls', -- For HTML-like expansions
+        -- Add markdownlint-cli here:
+        'markdownlint-cli',
       })
       require('mason-tool-installer').setup { ensure_installed = ensure_installed }
 
