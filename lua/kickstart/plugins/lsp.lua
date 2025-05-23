@@ -364,52 +364,70 @@ return {
       --
       -- You can add other tools here that you want Mason to install
       -- for you, so that they are available from within Neovim.
-      local ensure_installed = vim.tbl_keys(servers or {})
-      local ensure_installed = vim.tbl_keys(servers or {}) -- Get all server names from the `servers` table
-      vim.list_extend(ensure_installed, {
-        -- Lua
-        'stylua', -- Used to format Lua code
 
-        -- Shell
-        'shellcheck', -- For shell script linting (used by nvim-lint)
+      -- Ensure the servers and tools are installed by Mason.
+      -- This is a flat list of actual Mason package names.
+      local ensure_installed_mason_packages = {
+        -- Linters, Formatters, and other Tools (not primarily LSPs)
+        'stylua', -- Lua formatter
+        'shellcheck', -- Shell script linter
+        'eslint_d', -- JavaScript/TypeScript linter (daemonized)
+        'prettierd', -- General purpose formatter (daemonized)
+        'ruff', -- Python linter and formatter tool
+        'lazygit', -- Git TUI
+        'markdownlint-cli', -- Markdown linter
+        'tflint', -- Terraform linter
+        'hadolint', -- Dockerfile linter
+        'dotenv-linter', -- .env file linter
 
-        -- Web Development
-        'eslint_d', -- JavaScript/TypeScript linter (used by nvim-lint)
-        'prettierd', -- Formatter for web files (JS, TS, CSS, HTML, JSON, YAML, MD, etc.) (used by conform.nvim)
-        -- LSP servers for web dev are typically named like `typescript-language-server` (for ts_ls), `vscode-css-languageserver-bin` (for cssls),
-        -- `vscode-html-languageserver-bin` (for html), `emmet-ls` (for emmet_ls), `mdx-language-server` (for mdxls)
-        -- `vscode-json-languageserver` (for jsonls), `yaml-language-server` (for yamlls)
-        -- These are added to ensure_installed via vim.tbl_keys(servers) if they are defined in the servers table.
-        -- We explicitly ensure eslint_d and prettierd are installed as they are primary tools.
+        -- Mason Package Names for LSP Servers
+        -- Note: `lspconfig` server names are mapped to Mason package names here.
+        'lua-language-server',        -- for lua_ls
+        'typescript-language-server', -- for ts_ls
+        'emmet-ls',                   -- for emmet_ls
+        'yaml-language-server',       -- for yamlls
+        'vscode-json-languageserver', -- for jsonls
+        'ruff-lsp',                   -- for ruff_lsp (Ruff's LSP capabilities)
+        'taplo',                      -- for taplo (TOML)
+        'gopls',                      -- for gopls (Go)
+        'rust-analyzer',              -- for rust_analyzer (Rust)
+        'bash-language-server',       -- for bashls
+        'zsh-language-server',        -- for zls (Note: Mason might not have this exact name, will be ignored if so)
+        'vscode-css-languageserver-bin', -- for cssls
+        'vscode-html-languageserver-bin', -- for html
+        'terraform-ls',               -- for terraformls
+        'dockerfile-language-server', -- for dockerls
+        'sqlfluff',                   -- for sqlfluff (LSP, linter, formatter for SQL)
+        'mdx-language-server',        -- for mdxls
+        'makefls',                    -- for makefls (Makefile)
+        'spectral-language-server',   -- for spectral_language_server (OpenAPI)
+        'graphql-language-server-cli',-- for graphql
+        'postgresql-language-server', -- for postgresql_ls
+        'typst-lsp',                  -- for typst_lsp
+      }
+      
+      -- Remove duplicates to ensure each package is listed only once for mason-tool-installer.
+      -- This is important if a tool serves multiple roles (e.g., sqlfluff as LSP and linter).
+      local unique_packages = {}
+      local final_ensure_installed = {}
+      for _, pkg in ipairs(ensure_installed_mason_packages) do
+        if not unique_packages[pkg] then
+          table.insert(final_ensure_installed, pkg)
+          unique_packages[pkg] = true
+        end
+      end
 
-        -- Python
-        'ruff', -- Formatter and linter for Python (used by conform.nvim and nvim-lint)
-        -- `ruff-lsp` is added via vim.tbl_keys(servers)
-
-        -- Git
-        'lazygit', -- Terminal UI for git
-
-        -- Other Linters/Formatters/LSPs added by key from the `servers` table:
-        -- For LSPs like `typescript-language-server` (ts_ls), `emmet-ls` (emmet_ls), `yaml-language-server` (yamlls),
-        -- `vscode-json-languageserver` (jsonls), `ruff-lsp`, `taplo` (TOML), `gopls` (Go), `rust-analyzer`,
-        -- `bash-language-server` (bashls), `zsh-language-server` (zls), `vscode-css-languageserver-bin` (cssls),
-        -- `vscode-html-languageserver-bin` (html), `terraform-ls`, `dockerfile-language-server` (dockerls),
-        -- `sqlfluff`, `mdx-language-server` (mdxls), `makefls`, `spectral-language-server`,
-        -- `graphql-language-server-cli` (graphql), `postgresql-language-server`, `typst-lsp`.
-        -- Their corresponding Mason package names are added to `ensure_installed` automatically by `vim.tbl_keys(servers)`.
-
-        -- Additional tools that are not LSP servers but are useful and installed via Mason:
-        'markdownlint-cli', -- Markdown linter (used by nvim-lint)
-        'tflint', -- Terraform linter (used by nvim-lint)
-        'hadolint', -- Dockerfile linter (used by nvim-lint)
-        'dotenv-linter', -- .env file linter (used by nvim-lint)
-        -- `sqlfluff` is already added via `vim.tbl_keys(servers)` as it's also an LSP server.
-      })
-      require('mason-tool-installer').setup { ensure_installed = ensure_installed }
+      require('mason-tool-installer').setup { 
+        ensure_installed = final_ensure_installed 
+      }
 
       require('mason-lspconfig').setup {
-        ensure_installed = {}, -- explicitly set to an empty table (Kickstart populates installs via mason-tool-installer)
-        automatic_installation = false,
+        -- NOTE: `ensure_installed` for `mason-lspconfig` CAN take lspconfig server names.
+        -- However, since we are using `mason-tool-installer` to handle all installations,
+        -- this `ensure_installed` should be empty. `mason-tool-installer` has already
+        -- been triggered with the explicit Mason package names.
+        ensure_installed = {}, -- Explicitly empty as mason-tool-installer handles all installations.
+        automatic_installation = false, -- Keep false as mason-tool-installer is the primary installer.
         handlers = {
           function(server_name)
             local server = servers[server_name] or {}
