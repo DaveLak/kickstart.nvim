@@ -7,8 +7,67 @@ A starting point for Neovim that is:
 * Small
 * Modular (core and plugin configurations are split into logical files)
 * Completely Documented
+* **Extensively pre-configured** with a wide array of Language Server Protocol (LSP) servers, linters, and formatters for many common languages and tools. These are automatically installed via Mason.
 
-**NOT** a Neovim distribution, but instead a starting point for your configuration.
+**NOT** a Neovim distribution, but instead a starting point for your configuration, now with even more batteries included!
+
+## Features / Installed Tools
+
+This configuration comes with a comprehensive set of tools pre-configured and managed by `mason.nvim` and `mason-tool-installer.nvim` for a rich out-of-the-box experience.
+
+### Language Server Protocol (LSP) Servers
+
+Provides code intelligence (completion, diagnostics, go-to-definition, etc.) for:
+
+*   **JavaScript/TypeScript**: `ts_ls` (via `typescript-language-server`)
+*   **Lua**: `lua_ls` (for Neovim's own configuration language)
+*   **Python**: `ruff_lsp` (using Ruff's LSP capabilities)
+*   **Go**: `gopls`
+*   **Rust**: `rust_analyzer`
+*   **YAML**: `yamlls` (with Kubernetes schema support by default)
+*   **JSON**: `jsonls` (via `vscode-json-languageserver`)
+*   **HTML**: `html` (via `vscode-html-languageserver-bin`)
+*   **CSS/SCSS/Less**: `cssls` (via `vscode-css-languageserver-bin`)
+*   **Terraform**: `terraformls`
+*   **Dockerfiles**: `dockerls` (via `dockerfile-language-server`)
+*   **SQL**: `sqlfluff` (general SQL LSP, also linter/formatter)
+*   **PostgreSQL**: `postgresql_ls` (specific to PostgreSQL)
+*   **TOML**: `taplo`
+*   **Shell (Bash/Zsh)**: `bashls` (Bash), `zls` (Zsh)
+*   **MDX**: `mdxls` (via `mdx-language-server`)
+*   **Makefiles**: `makefls`
+*   **OpenAPI**: `spectral_language_server`
+*   **GraphQL**: `graphql` (via `graphql-language-server-cli`)
+*   **Typst**: `typst_lsp`
+*   **Emmet**: `emmet_ls` (for HTML-like expansions in various filetypes)
+
+### Linters
+
+Integrated via `nvim-lint` for on-the-fly code checking:
+
+*   **JavaScript/TypeScript**: `eslint_d`
+*   **Python**: `ruff`
+*   **Shell (Bash/Sh/Zsh)**: `shellcheck`
+*   **Terraform**: `tflint`
+*   **Dockerfiles**: `hadolint`
+*   **SQL**: `sqlfluff`
+*   **Markdown**: `markdownlint-cli` (via `markdownlint`)
+*   **.env files**: `dotenv-linter`
+
+### Formatters
+
+Integrated via `conform.nvim` for code formatting (often on save):
+
+*   **Lua**: `stylua`
+*   **Python**: `ruff_format` (using Ruff's formatting)
+*   **Web files (JS, TS, JSX, TSX, CSS, HTML, JSON, YAML, Markdown, MDX, GraphQL)**: `prettier` (or `prettierd` if available)
+*   **Terraform**: `terraformfmt` (native Terraform formatter)
+*   **SQL**: `sqlfluff`
+
+### Other Key Plugins
+
+*   **`trouble.nvim`**: A pretty list for diagnostics, references, quickfix, and more.
+*   **`lazygit.nvim`**: Integration with the `lazygit` terminal UI for Git.
 
 ## Installation
 
@@ -166,10 +225,37 @@ popularly requested plugins.
       add your own unique plugins and their configurations. Kickstart can be configured
       to automatically load Lua files from this directory (see the `import = 'custom.plugins'`
       line in `init.lua`'s `lazy.setup` call). This keeps your personalizations separate
-      from the base Kickstart configuration, making updates easier.
+      from the base Kickstart configuration, making updates easier. You can see examples
+      like `trouble.lua` and `lazygit.lua` in this directory.
   * This modular approach makes it easier to understand, manage, and extend your
     Neovim setup. You can easily find where specific settings or plugin configurations
     are located.
+
+### Default Keybindings
+
+This configuration sets up a few global keybindings for convenience:
+
+*   `<leader>f`: Format buffer using `conform.nvim`.
+*   `<leader>xx`: Toggle Trouble diagnostics window.
+*   `<leader>xw`: Toggle Workspace Diagnostics in Trouble.
+*   `<leader>xd`: Toggle Document Diagnostics in Trouble.
+*   `<leader>xq`: Toggle Quickfix List in Trouble.
+*   `<leader>xl`: Toggle Location List in Trouble.
+*   `gR`: Go to next item in Trouble.
+*   `gr`: Go to previous item in Trouble.
+*   `<leader>gg`: Open LazyGit.
+
+Many other keybindings are configured for specific plugins (like Telescope, LSP actions)
+and can be found within their respective configuration files in `lua/kickstart/plugins/`
+and `lua/kickstart/core/keymaps.lua`. `<leader>` is typically mapped to the `Space` key.
+
+### Automation with Mason
+
+All the listed LSPs, linters, and formatters are managed by `mason.nvim` and
+`mason-tool-installer.nvim`. On the first run, these tools will be automatically
+installed, providing a seamless setup experience. You can manage these tools
+using the `:Mason` command.
+
 * How do I add a new plugin?
   * **For personal use (recommended for most users):**
     1. Create a new Lua file in the `lua/custom/plugins/` directory (e.g., `lua/custom/plugins/my-new-plugin.lua`).

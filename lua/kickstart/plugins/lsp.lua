@@ -221,8 +221,9 @@ return {
         -- But for many setups, the LSP (`ts_ls`) will work just fine
         -- ts_ls = {},
         --
-        ts_ls = {
+        ts_ls = { -- TypeScript/JavaScript
           -- Optional: Disable tsserver formatting if using conform.nvim with prettier
+          -- This allows Prettier to take over formatting duties for JS/TS.
           settings = {
             typescript = {
               format = {
@@ -241,9 +242,9 @@ return {
           -- For now, default tsserver diagnostics will be active alongside external eslint_d from nvim-lint.
         },
 
-        emmet_ls = {}, -- Corrected server name to emmet_ls
+        emmet_ls = {}, -- HTML/CSS/JSX/TSX emmet support (e.g. div.foo>span#bar)
 
-        lua_ls = {
+        lua_ls = { -- Lua language server
           -- cmd = { ... },
           -- filetypes = { ... },
           -- capabilities = {},
@@ -258,46 +259,47 @@ return {
           },
         },
         -- Add yamlls
-        yamlls = {
+        yamlls = { -- YAML language server
           settings = {
             yaml = {
               schemas = {
                 -- Add or update Kubernetes schema
-                ["kubernetes"] = "/*.(yml|yaml)",
+                ["kubernetes"] = "/*.(yml|yaml)", -- Applies Kubernetes schema to all .yml or .yaml files
                 -- You can add other schemas here too, for example:
-                ["https://json.schemastore.org/github-workflow.json"] = "/.github/workflows/*",
-                ["https://json.schemastore.org/composer.json"] = "/composer.json",
+                ["https://json.schemastore.org/github-workflow.json"] = "/.github/workflows/*", -- For GitHub Actions workflows
+                ["https://json.schemastore.org/composer.json"] = "/composer.json", -- For PHP composer.json
               },
               -- To ensure Prettier is used for formatting YAML, disable yamlls formatter if it's enabled by default
               format = {
-                enable = false,
+                enable = false, -- We use Prettier for YAML formatting
               },
               validate = true, -- Explicitly enable validation
             },
           },
         },
-        -- Add jsonls
-        jsonls = {
+        jsonls = { -- JSON language server
           -- Example settings if you want to add schemas later:
           -- settings = {
           --   json = {
-          --     schemas = {
+          --     schemas = { -- See https://www.schemastore.org/json/ for available schemas
           --       {
           --         fileMatch = { "package.json" },
           --         url = "http://json.schemastore.org/package",
           --       },
+          --       {
+          --         fileMatch = { ".eslintrc.json" },
+          --         url = "http://json.schemastore.org/eslintrc",
+          --       }
           --     },
           --   },
           -- },
         },
-        -- Add ruff_lsp
-        ruff_lsp = {
+        ruff_lsp = { -- Python LSP (alternative to pyright, focuses on ruff)
           -- init_options = { settings = { args = {} } } -- Example for future customization
         },
-        -- Add taplo
-        taplo = {},
-        -- Add gopls
-        gopls = {
+        taplo = { -- TOML language server
+        },
+        gopls = { -- Go language server
           -- Example settings for gopls:
           -- settings = {
           --   gopls = {
@@ -308,44 +310,48 @@ return {
           --   },
           -- },
         },
-        -- Add rust_analyzer
-        rust_analyzer = {
+        rust_analyzer = { -- Rust language server
           -- Example settings for rust_analyzer:
           -- settings = {
-          --   ['rust-analyzer'] = {
-          --     checkOnSave = { command = "clippy" },
+          --   ['rust-analyzer'] = { -- Note: settings table uses 'rust-analyzer' as key
+          --     checkOnSave = { command = "clippy" }, -- Example: Use clippy for checks on save
           --   },
           -- },
         },
-        -- Add bashls
-        bashls = {},
-        -- Add zls
-        zls = {}, -- If zsh-language-server is not found by Mason, this server setup will effectively be a no-op for zls.
-        -- Add cssls
-        cssls = {},
-        -- Add html
-        html = {},
-        -- Add terraformls
-        terraformls = {},
-        -- Add dockerls
-        dockerls = {},
-        -- Add sqlfluff
-        sqlfluff = {},
-        -- Add mdxls
-        mdxls = {},
-        -- Add makefls
-        makefls = {},
-        -- Add spectral_language_server
-        spectral_language_server = {
-          -- filetypes = { "yaml", "json" } -- Usually auto-detected for openapi files
+        bashls = { -- Bash language server
         },
-        -- Add graphql
-        graphql = {},
-        -- Add postgresql_ls
-        postgresql_ls = {},
+        zls = { -- Zsh language server
+          -- If zsh-language-server is not found by Mason, this server setup will effectively be a no-op for zls.
+        },
+        cssls = { -- CSS language server
+        },
+        html = { -- HTML language server
+        },
+        terraformls = { -- Terraform language server
+        },
+        dockerls = { -- Dockerfile language server
+        },
+        sqlfluff = { -- SQLFluff LSP for SQL linting and formatting
+        },
+        mdxls = { -- MDX language server
+        },
+        makefls = { -- Makefile language server
+        },
+        spectral_language_server = { -- OpenAPI/Swagger linter
+          -- filetypes = { "yaml", "json" } -- Usually auto-detected for openapi files based on content
+        },
+        graphql = { -- GraphQL language server
+        },
+        postgresql_ls = { -- PostgreSQL language server (more specific than sqlfluff for PostgreSQL)
+        },
+        typst_lsp = { -- Typst language server (for the Typst typesetting system)
+        },
       }
 
       -- Ensure the servers and tools above are installed
+      --  This uses the vim.tbl_keys function to get all the keys from the `servers` table.
+      --  The `vim.list_extend` function then adds other tools that Mason should install.
+      --  These tools include formatters, linters, and other utilities.
       --
       -- To check the current status of installed tools and/or manually install
       -- other tools, you can run
@@ -359,56 +365,45 @@ return {
       -- You can add other tools here that you want Mason to install
       -- for you, so that they are available from within Neovim.
       local ensure_installed = vim.tbl_keys(servers or {})
+      local ensure_installed = vim.tbl_keys(servers or {}) -- Get all server names from the `servers` table
       vim.list_extend(ensure_installed, {
+        -- Lua
         'stylua', -- Used to format Lua code
-        -- Add new tools here:
-        'shellcheck',
-        'eslint_d', -- Should already be here
-        'prettierd', -- Formatter for web files (daemonized version)
-        'ruff', -- Formatter and linter for Python
-        -- Add new tool here:
-        'lazygit',
-        -- Add LSP servers here if not covered by server keys:
-        'typescript-language-server',
-        'emmet-ls', -- For HTML-like expansions (name in mason is emmet-ls)
-        -- Add markdownlint-cli here:
-        'markdownlint-cli',
-        -- Add yaml-language-server here:
-        'yaml-language-server',
-        -- Add vscode-json-languageserver here:
-        'vscode-json-languageserver',
-        -- Add ruff-lsp here:
-        'ruff-lsp',
-        -- Add taplo here:
-        'taplo',
-        -- Add gopls here:
-        'gopls',
-        -- Add rust-analyzer here:
-        'rust-analyzer',
-        -- Add bash and zsh LSPs here:
-        'bash-language-server',
-        'zsh-language-server', -- This is speculative, if it doesn't exist Mason will ignore it.
-        -- Add CSS and HTML LSPs here:
-        'vscode-css-languageserver-bin',
-        'vscode-html-languageserver-bin',
-        -- Add Terraform tools here:
-        'terraform-ls',
-        'tflint',
-        -- Add Docker tools here:
-        'dockerfile-language-server', -- For dockerls
-        'hadolint',
-        -- Add SQLFluff here:
-        'sqlfluff',
-        -- Add MDX language server here:
-        'mdx-language-server', -- If not available, Mason will ignore it.
-        -- Add makefls here:
-        'makefls',
-        -- Add spectral-language-server here:
-        'spectral-language-server',
-        -- Add GraphQL language server here:
-        'graphql-language-server-cli',
-        -- Add PostgreSQL language server here:
-        'postgresql-language-server',
+
+        -- Shell
+        'shellcheck', -- For shell script linting (used by nvim-lint)
+
+        -- Web Development
+        'eslint_d', -- JavaScript/TypeScript linter (used by nvim-lint)
+        'prettierd', -- Formatter for web files (JS, TS, CSS, HTML, JSON, YAML, MD, etc.) (used by conform.nvim)
+        -- LSP servers for web dev are typically named like `typescript-language-server` (for ts_ls), `vscode-css-languageserver-bin` (for cssls),
+        -- `vscode-html-languageserver-bin` (for html), `emmet-ls` (for emmet_ls), `mdx-language-server` (for mdxls)
+        -- `vscode-json-languageserver` (for jsonls), `yaml-language-server` (for yamlls)
+        -- These are added to ensure_installed via vim.tbl_keys(servers) if they are defined in the servers table.
+        -- We explicitly ensure eslint_d and prettierd are installed as they are primary tools.
+
+        -- Python
+        'ruff', -- Formatter and linter for Python (used by conform.nvim and nvim-lint)
+        -- `ruff-lsp` is added via vim.tbl_keys(servers)
+
+        -- Git
+        'lazygit', -- Terminal UI for git
+
+        -- Other Linters/Formatters/LSPs added by key from the `servers` table:
+        -- For LSPs like `typescript-language-server` (ts_ls), `emmet-ls` (emmet_ls), `yaml-language-server` (yamlls),
+        -- `vscode-json-languageserver` (jsonls), `ruff-lsp`, `taplo` (TOML), `gopls` (Go), `rust-analyzer`,
+        -- `bash-language-server` (bashls), `zsh-language-server` (zls), `vscode-css-languageserver-bin` (cssls),
+        -- `vscode-html-languageserver-bin` (html), `terraform-ls`, `dockerfile-language-server` (dockerls),
+        -- `sqlfluff`, `mdx-language-server` (mdxls), `makefls`, `spectral-language-server`,
+        -- `graphql-language-server-cli` (graphql), `postgresql-language-server`, `typst-lsp`.
+        -- Their corresponding Mason package names are added to `ensure_installed` automatically by `vim.tbl_keys(servers)`.
+
+        -- Additional tools that are not LSP servers but are useful and installed via Mason:
+        'markdownlint-cli', -- Markdown linter (used by nvim-lint)
+        'tflint', -- Terraform linter (used by nvim-lint)
+        'hadolint', -- Dockerfile linter (used by nvim-lint)
+        'dotenv-linter', -- .env file linter (used by nvim-lint)
+        -- `sqlfluff` is already added via `vim.tbl_keys(servers)` as it's also an LSP server.
       })
       require('mason-tool-installer').setup { ensure_installed = ensure_installed }
 

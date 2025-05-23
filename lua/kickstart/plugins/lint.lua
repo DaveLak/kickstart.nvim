@@ -12,33 +12,37 @@ return {
 
       -- To allow other plugins to add linters to require('lint').linters_by_ft,
       -- instead set linters_by_ft like this:
+      -- This pattern allows overriding or adding linters by filetype.
+      -- If `lint.linters_by_ft` already exists, it uses that table; otherwise, it creates a new one.
+      -- This makes the configuration extensible and allows other plugins or user configs to add more linters.
       lint.linters_by_ft = lint.linters_by_ft or {}
-      lint.linters_by_ft.markdown = { 'markdownlint' } -- Or whatever was there
 
-      -- Add shellcheck
-      lint.linters_by_ft.sh = { 'shellcheck' }
-      lint.linters_by_ft.bash = { 'shellcheck' } -- Also for bash
-      lint.linters_by_ft.zsh = { 'shellcheck' } -- Also for zsh
+      -- General web and text file linters
+      lint.linters_by_ft.markdown = { 'markdownlint' } -- Markdown style and syntax
+      lint.linters_by_ft.dotenv = { 'dotenv-linter' } -- Linting for .env files
 
-      -- Add eslint_d
-      lint.linters_by_ft.javascript = { 'eslint_d' }
+      -- Shell script linters
+      lint.linters_by_ft.sh = { 'shellcheck' } -- General shell scripts
+      lint.linters_by_ft.bash = { 'shellcheck' } -- Bash specific
+      lint.linters_by_ft.zsh = { 'shellcheck' } -- Zsh specific (shellcheck handles different shell dialects)
+
+      -- JavaScript/TypeScript and related frameworks
+      lint.linters_by_ft.javascript = { 'eslint_d' } -- Using eslint_d for faster linting
       lint.linters_by_ft.typescript = { 'eslint_d' }
-      lint.linters_by_ft.javascriptreact = { 'eslint_d' }
-      lint.linters_by_ft.typescriptreact = { 'eslint_d' }
-      lint.linters_by_ft.vue = { 'eslint_d' } -- Also for vue if desired
+      lint.linters_by_ft.javascriptreact = { 'eslint_d' } -- For JSX
+      lint.linters_by_ft.typescriptreact = { 'eslint_d' } -- For TSX
+      lint.linters_by_ft.vue = { 'eslint_d' } -- For Vue.js single-file components
 
-      -- Add ruff for python
-      lint.linters_by_ft.python = { 'ruff' }
+      -- Python
+      lint.linters_by_ft.python = { 'ruff' } -- Fast Python linter and formatter
 
-      -- Add tflint for terraform
-      lint.linters_by_ft.terraform = { 'tflint' }
-      lint.linters_by_ft.tf = { 'tflint' } -- for .tf files
+      -- Infrastructure and DevOps
+      lint.linters_by_ft.terraform = { 'tflint' } -- Terraform linter
+      lint.linters_by_ft.tf = { 'tflint' } -- Also for .tf files (common extension)
+      lint.linters_by_ft.dockerfile = { 'hadolint' } -- Dockerfile linter
 
-      -- Add hadolint for dockerfile
-      lint.linters_by_ft.dockerfile = { 'hadolint' }
-
-      -- Add sqlfluff for sql
-      lint.linters_by_ft.sql = { 'sqlfluff' }
+      -- SQL
+      lint.linters_by_ft.sql = { 'sqlfluff' } -- SQL linter and formatter
 
       -- To allow other plugins to add linters to require('lint').linters_by_ft,
       -- instead set linters_by_ft like this:
