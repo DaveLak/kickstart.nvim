@@ -47,6 +47,11 @@ return {
       html = { 'prettierd', 'prettier', stop_after_first = true },
       mdx = { 'prettierd', 'prettier', stop_after_first = true },
       graphql = { 'prettierd', 'prettier', stop_after_first = true },
+      -- Add terraformfmt
+      terraform = { 'terraformfmt' },
+      tf = { 'terraformfmt' }, -- for .tf files
+      -- Add sqlfluff
+      sql = { 'sqlfluff' },
       -- Example of multiple formatters if needed for other languages:
       -- c = { "clang-format" },
     },

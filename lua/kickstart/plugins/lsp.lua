@@ -241,7 +241,7 @@ return {
           -- For now, default tsserver diagnostics will be active alongside external eslint_d from nvim-lint.
         },
 
-        emmetls = {}, -- Default configuration is usually fine
+        emmet_ls = {}, -- Corrected server name to emmet_ls
 
         lua_ls = {
           -- cmd = { ... },
@@ -257,6 +257,92 @@ return {
             },
           },
         },
+        -- Add yamlls
+        yamlls = {
+          settings = {
+            yaml = {
+              schemas = {
+                -- Add or update Kubernetes schema
+                ["kubernetes"] = "/*.(yml|yaml)",
+                -- You can add other schemas here too, for example:
+                ["https://json.schemastore.org/github-workflow.json"] = "/.github/workflows/*",
+                ["https://json.schemastore.org/composer.json"] = "/composer.json",
+              },
+              -- To ensure Prettier is used for formatting YAML, disable yamlls formatter if it's enabled by default
+              format = {
+                enable = false,
+              },
+              validate = true, -- Explicitly enable validation
+            },
+          },
+        },
+        -- Add jsonls
+        jsonls = {
+          -- Example settings if you want to add schemas later:
+          -- settings = {
+          --   json = {
+          --     schemas = {
+          --       {
+          --         fileMatch = { "package.json" },
+          --         url = "http://json.schemastore.org/package",
+          --       },
+          --     },
+          --   },
+          -- },
+        },
+        -- Add ruff_lsp
+        ruff_lsp = {
+          -- init_options = { settings = { args = {} } } -- Example for future customization
+        },
+        -- Add taplo
+        taplo = {},
+        -- Add gopls
+        gopls = {
+          -- Example settings for gopls:
+          -- settings = {
+          --   gopls = {
+          --     analyses = {
+          --       unusedparams = true,
+          --     },
+          --     staticcheck = true,
+          --   },
+          -- },
+        },
+        -- Add rust_analyzer
+        rust_analyzer = {
+          -- Example settings for rust_analyzer:
+          -- settings = {
+          --   ['rust-analyzer'] = {
+          --     checkOnSave = { command = "clippy" },
+          --   },
+          -- },
+        },
+        -- Add bashls
+        bashls = {},
+        -- Add zls
+        zls = {}, -- If zsh-language-server is not found by Mason, this server setup will effectively be a no-op for zls.
+        -- Add cssls
+        cssls = {},
+        -- Add html
+        html = {},
+        -- Add terraformls
+        terraformls = {},
+        -- Add dockerls
+        dockerls = {},
+        -- Add sqlfluff
+        sqlfluff = {},
+        -- Add mdxls
+        mdxls = {},
+        -- Add makefls
+        makefls = {},
+        -- Add spectral_language_server
+        spectral_language_server = {
+          -- filetypes = { "yaml", "json" } -- Usually auto-detected for openapi files
+        },
+        -- Add graphql
+        graphql = {},
+        -- Add postgresql_ls
+        postgresql_ls = {},
       }
 
       -- Ensure the servers and tools above are installed
@@ -284,9 +370,45 @@ return {
         'lazygit',
         -- Add LSP servers here if not covered by server keys:
         'typescript-language-server',
-        'emmet-ls', -- For HTML-like expansions
+        'emmet-ls', -- For HTML-like expansions (name in mason is emmet-ls)
         -- Add markdownlint-cli here:
         'markdownlint-cli',
+        -- Add yaml-language-server here:
+        'yaml-language-server',
+        -- Add vscode-json-languageserver here:
+        'vscode-json-languageserver',
+        -- Add ruff-lsp here:
+        'ruff-lsp',
+        -- Add taplo here:
+        'taplo',
+        -- Add gopls here:
+        'gopls',
+        -- Add rust-analyzer here:
+        'rust-analyzer',
+        -- Add bash and zsh LSPs here:
+        'bash-language-server',
+        'zsh-language-server', -- This is speculative, if it doesn't exist Mason will ignore it.
+        -- Add CSS and HTML LSPs here:
+        'vscode-css-languageserver-bin',
+        'vscode-html-languageserver-bin',
+        -- Add Terraform tools here:
+        'terraform-ls',
+        'tflint',
+        -- Add Docker tools here:
+        'dockerfile-language-server', -- For dockerls
+        'hadolint',
+        -- Add SQLFluff here:
+        'sqlfluff',
+        -- Add MDX language server here:
+        'mdx-language-server', -- If not available, Mason will ignore it.
+        -- Add makefls here:
+        'makefls',
+        -- Add spectral-language-server here:
+        'spectral-language-server',
+        -- Add GraphQL language server here:
+        'graphql-language-server-cli',
+        -- Add PostgreSQL language server here:
+        'postgresql-language-server',
       })
       require('mason-tool-installer').setup { ensure_installed = ensure_installed }
 

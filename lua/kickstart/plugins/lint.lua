@@ -27,6 +27,19 @@ return {
       lint.linters_by_ft.typescriptreact = { 'eslint_d' }
       lint.linters_by_ft.vue = { 'eslint_d' } -- Also for vue if desired
 
+      -- Add ruff for python
+      lint.linters_by_ft.python = { 'ruff' }
+
+      -- Add tflint for terraform
+      lint.linters_by_ft.terraform = { 'tflint' }
+      lint.linters_by_ft.tf = { 'tflint' } -- for .tf files
+
+      -- Add hadolint for dockerfile
+      lint.linters_by_ft.dockerfile = { 'hadolint' }
+
+      -- Add sqlfluff for sql
+      lint.linters_by_ft.sql = { 'sqlfluff' }
+
       -- To allow other plugins to add linters to require('lint').linters_by_ft,
       -- instead set linters_by_ft like this:
       -- lint.linters_by_ft = lint.linters_by_ft or {}
