@@ -4,5 +4,4 @@
 -- See the kickstart.nvim README for more information
 return {
   require('custom.plugins.trouble'),
-  require('custom.plugins.lazygit'),
 }

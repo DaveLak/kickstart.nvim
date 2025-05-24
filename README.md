@@ -67,7 +67,6 @@ Integrated via `conform.nvim` for code formatting (often on save):
 ### Other Key Plugins
 
 *   **`trouble.nvim`**: A pretty list for diagnostics, references, quickfix, and more.
-*   **`lazygit.nvim`**: Integration with the `lazygit` terminal UI for Git.
 
 ## Installation
 
@@ -225,8 +224,8 @@ popularly requested plugins.
       add your own unique plugins and their configurations. Kickstart can be configured
       to automatically load Lua files from this directory (see the `import = 'custom.plugins'`
       line in `init.lua`'s `lazy.setup` call). This keeps your personalizations separate
-      from the base Kickstart configuration, making updates easier. You can see examples
-      like `trouble.lua` and `lazygit.lua` in this directory.
+      from the base Kickstart configuration, making updates easier. You can see an example
+      like `trouble.lua` in this directory.
   * This modular approach makes it easier to understand, manage, and extend your
     Neovim setup. You can easily find where specific settings or plugin configurations
     are located.
@@ -243,7 +242,6 @@ This configuration sets up a few global keybindings for convenience:
 *   `<leader>xl`: Toggle Location List in Trouble.
 *   `gR`: Go to next item in Trouble.
 *   `gr`: Go to previous item in Trouble.
-*   `<leader>gg`: Open LazyGit.
 
 Many other keybindings are configured for specific plugins (like Telescope, LSP actions)
 and can be found within their respective configuration files in `lua/kickstart/plugins/`

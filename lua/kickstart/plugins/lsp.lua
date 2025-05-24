@@ -374,7 +374,7 @@ return {
         'eslint_d', -- JavaScript/TypeScript linter (daemonized)
         'prettierd', -- General purpose formatter (daemonized)
         'ruff', -- Python linter and formatter tool
-        'lazygit', -- Git TUI
+        -- 'lazygit', -- Git TUI (Installation handled by lazygit.nvim plugin itself if needed, or manual)
         'markdownlint-cli', -- Markdown linter
         'tflint', -- Terraform linter
         'hadolint', -- Dockerfile linter
