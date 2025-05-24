@@ -375,7 +375,7 @@ return {
         'prettierd', -- General purpose formatter (daemonized)
         'ruff', -- Python linter and formatter tool
         -- 'lazygit', -- Git TUI (Installation handled by lazygit.nvim plugin itself if needed, or manual)
-        'markdownlint-cli', -- Markdown linter
+        'markdownlint', -- Markdown linter (Note: nvim-lint uses 'markdownlint' which is the CLI tool for 'markdownlint-cli' package in Mason)
         'tflint', -- Terraform linter
         'hadolint', -- Dockerfile linter
         'dotenv-linter', -- .env file linter
