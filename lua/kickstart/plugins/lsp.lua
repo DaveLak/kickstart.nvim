@@ -221,7 +221,8 @@ return {
         -- But for many setups, the LSP (`ts_ls`) will work just fine
         -- ts_ls = {},
         --
-        ts_ls = { -- TypeScript/JavaScript
+        -- LSP server for TypeScript and JavaScript
+        tsserver = { -- Changed from ts_ls to tsserver to match common lspconfig name for typescript-language-server
           -- Optional: Disable tsserver formatting if using conform.nvim with prettier
           -- This allows Prettier to take over formatting duties for JS/TS.
           settings = {
@@ -263,41 +264,24 @@ return {
           settings = {
             yaml = {
               schemas = {
-                -- Add or update Kubernetes schema
-                ["kubernetes"] = "/*.(yml|yaml)", -- Applies Kubernetes schema to all .yml or .yaml files
-                -- You can add other schemas here too, for example:
-                ["https://json.schemastore.org/github-workflow.json"] = "/.github/workflows/*", -- For GitHub Actions workflows
-                ["https://json.schemastore.org/composer.json"] = "/composer.json", -- For PHP composer.json
+                ["kubernetes"] = "/*.(yml|yaml)", 
+                ["https://json.schemastore.org/github-workflow.json"] = "/.github/workflows/*",
+                ["https://json.schemastore.org/composer.json"] = "/composer.json",
               },
-              -- To ensure Prettier is used for formatting YAML, disable yamlls formatter if it's enabled by default
               format = {
-                enable = false, -- We use Prettier for YAML formatting
+                enable = false, 
               },
-              validate = true, -- Explicitly enable validation
+              validate = true, 
             },
           },
         },
-        jsonls = { -- JSON language server
-          -- Example settings if you want to add schemas later:
-          -- settings = {
-          --   json = {
-          --     schemas = { -- See https://www.schemastore.org/json/ for available schemas
-          --       {
-          --         fileMatch = { "package.json" },
-          --         url = "http://json.schemastore.org/package",
-          --       },
-          --       {
-          --         fileMatch = { ".eslintrc.json" },
-          --         url = "http://json.schemastore.org/eslintrc",
-          --       }
-          --     },
-          --   },
-          -- },
+        jsonls = { -- JSON language server (Mason: json-lsp)
         },
-        ruff_lsp = { -- Python LSP (alternative to pyright, focuses on ruff)
-          -- init_options = { settings = { args = {} } } -- Example for future customization
+        -- Python: pyright is used instead of ruff-lsp for LSP features.
+        -- Ruff is still used for linting and formatting.
+        pyright = { -- Python LSP (Mason: pyright)
         },
-        taplo = { -- TOML language server
+        taplo = { -- TOML language server (Mason: taplo)
         },
         gopls = { -- Go language server
           -- Example settings for gopls:
@@ -323,28 +307,27 @@ return {
         zls = { -- Zsh language server
           -- If zsh-language-server is not found by Mason, this server setup will effectively be a no-op for zls.
         },
-        cssls = { -- CSS language server
+        cssls = { -- CSS language server (Mason: css-lsp)
         },
-        html = { -- HTML language server
+        html = { -- HTML language server (Mason: html-lsp)
         },
-        terraformls = { -- Terraform language server
+        terraformls = { -- Terraform language server (Mason: terraform-ls)
         },
-        dockerls = { -- Dockerfile language server
+        dockerls = { -- Dockerfile language server (Mason: dockerfile-language-server)
         },
-        sqlfluff = { -- SQLFluff LSP for SQL linting and formatting
+        sqlfluff = { -- SQLFluff LSP for SQL linting and formatting (Mason: sqlfluff)
         },
-        mdxls = { -- MDX language server
+        mdx_analyzer = { -- MDX language server (Mason: mdx-analyzer)
         },
-        makefls = { -- Makefile language server
+        -- makefls was removed
+        spectral = { -- OpenAPI/Swagger linter (Mason: spectral-language-server)
+          -- filetypes = { "yaml", "json" } 
         },
-        spectral_language_server = { -- OpenAPI/Swagger linter
-          -- filetypes = { "yaml", "json" } -- Usually auto-detected for openapi files based on content
+        graphql = { -- GraphQL language server (Mason: graphql-language-server-cli)
         },
-        graphql = { -- GraphQL language server
+        postgres_lsp = { -- PostgreSQL language server (Mason: postgrestools)
         },
-        postgresql_ls = { -- PostgreSQL language server (more specific than sqlfluff for PostgreSQL)
-        },
-        typst_lsp = { -- Typst language server (for the Typst typesetting system)
+        tinymist = { -- Typst language server (Mason: tinymist)
         },
       }
 
@@ -369,43 +352,42 @@ return {
       -- This is a flat list of actual Mason package names.
       local ensure_installed_mason_packages = {
         -- Linters, Formatters, and other Tools (not primarily LSPs)
-        'stylua', -- Lua formatter
-        'shellcheck', -- Shell script linter
-        'eslint_d', -- JavaScript/TypeScript linter (daemonized)
-        'prettierd', -- General purpose formatter (daemonized)
-        'ruff', -- Python linter and formatter tool
-        -- 'lazygit', -- Git TUI (Installation handled by lazygit.nvim plugin itself if needed, or manual)
-        'markdownlint', -- Markdown linter (Note: nvim-lint uses 'markdownlint' which is the CLI tool for 'markdownlint-cli' package in Mason)
-        'tflint', -- Terraform linter
-        'hadolint', -- Dockerfile linter
-        'dotenv-linter', -- .env file linter
+        'stylua',             -- Lua formatter
+        'shellcheck',         -- Shell script linter
+        'eslint_d',           -- JavaScript/TypeScript linter (daemonized) - Consider eslint-lsp if issues
+        'prettier',           -- General purpose formatter (changed from prettierd)
+        'ruff',               -- Python linter and formatter tool
+        'markdownlint',       -- Markdown linter
+        'tflint',             -- Terraform linter
+        'hadolint',           -- Dockerfile linter
+        'dotenv-linter',      -- .env file linter
 
         -- Mason Package Names for LSP Servers
-        -- Note: `lspconfig` server names are mapped to Mason package names here.
-        'lua-language-server',        -- for lua_ls
-        'typescript-language-server', -- for ts_ls
-        'emmet-ls',                   -- for emmet_ls
-        'yaml-language-server',       -- for yamlls
-        'vscode-json-languageserver', -- for jsonls
-        'ruff-lsp',                   -- for ruff_lsp (Ruff's LSP capabilities)
-        'taplo',                      -- for taplo (TOML)
-        'gopls',                      -- for gopls (Go)
-        'rust-analyzer',              -- for rust_analyzer (Rust)
-        'bash-language-server',       -- for bashls
-        'zsh-language-server',        -- for zls (Note: Mason might not have this exact name, will be ignored if so)
-        'vscode-css-languageserver-bin', -- for cssls
-        'vscode-html-languageserver-bin', -- for html
-        'terraform-ls',               -- for terraformls
-        'dockerfile-language-server', -- for dockerls
-        'sqlfluff',                   -- for sqlfluff (LSP, linter, formatter for SQL)
-        'mdx-language-server',        -- for mdxls
-        'makefls',                    -- for makefls (Makefile)
-        'spectral-language-server',   -- for spectral_language_server (OpenAPI)
-        'graphql-language-server-cli',-- for graphql
-        'postgresql-language-server', -- for postgresql_ls
-        'typst-lsp',                  -- for typst_lsp
+        -- (Aligned with the user-provided list and common Mason package names)
+        'lua-language-server',         -- for lua_ls
+        'typescript-language-server',  -- for tsserver (LSP name for ts_ls)
+        'emmet-ls',                    -- for emmet_ls
+        'yaml-language-server',        -- for yamlls
+        'json-lsp',                    -- for jsonls (changed from vscode-json-languageserver)
+        'pyright',                     -- for pyright (Python LSP, changed from ruff-lsp)
+        'taplo',                       -- for taplo (TOML)
+        'gopls',                       -- for gopls (Go)
+        'rust-analyzer',               -- for rust_analyzer (Rust)
+        'bash-language-server',        -- for bashls
+        'zsh-language-server',         -- for zls
+        'css-lsp',                     -- for cssls (changed from vscode-css-languageserver-bin)
+        'html-lsp',                    -- for html (changed from vscode-html-languageserver-bin)
+        'terraform-ls',                -- for terraformls
+        'dockerfile-language-server',  -- for dockerls
+        'sqlfluff',                    -- for sqlfluff (LSP, linter, formatter for SQL)
+        'mdx-analyzer',                -- for mdx_analyzer (changed from mdx-language-server)
+        -- 'makefls' was removed
+        'spectral-language-server',    -- for spectral (LSP name for spectral_language_server)
+        'graphql-language-server-cli', -- for graphql
+        'postgrestools',               -- for postgres_lsp (changed from postgresql-language-server)
+        'tinymist',                    -- for tinymist (Typst LSP, changed from typst-lsp)
       }
-      
+
       -- Remove duplicates to ensure each package is listed only once for mason-tool-installer.
       -- This is important if a tool serves multiple roles (e.g., sqlfluff as LSP and linter).
       local unique_packages = {}
