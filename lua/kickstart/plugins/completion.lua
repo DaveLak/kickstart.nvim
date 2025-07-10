@@ -31,7 +31,7 @@ return {
       opts = {},
     },
     'folke/lazydev.nvim', -- This is already in lsp.lua, but also a dependency here.
-                          -- lazy.nvim will handle deduplication.
+    -- lazy.nvim will handle deduplication.
   },
   --- @module 'blink.cmp'
   --- @type blink.cmp.Config
@@ -59,7 +59,11 @@ return {
       --
       -- See :h blink-cmp-config-keymap for defining your own keymap
       preset = 'default',
+      -- Remap the default <C-space> behavior to <C-x>
+      ['<C-x>'] = { 'show', 'show_documentation', 'hide_documentation' },
 
+      -- Disable the original conflicting keymap
+      ['<C-space>'] = false,
       -- For more advanced Luasnip keymaps (e.g. selecting choice nodes, expansion) see:
       --    https://github.com/L3MON4D3/LuaSnip?tab=readme-ov-file#keymaps
     },
