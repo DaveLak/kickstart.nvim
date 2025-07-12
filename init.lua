@@ -184,7 +184,7 @@ require('lazy').setup({
   --
   --  Uncomment the following line and add your plugins to `lua/custom/plugins/*.lua` to get going.
   --    For example, create a file `lua/custom/plugins/foo.lua` and add plugin specs to that file.
-  -- { import = 'custom.plugins' },
+  { import = 'custom.plugins' },
   --
   -- For additional information with loading, sourcing and examples see `:help lazy.nvim-lazy.nvim-plugin-spec`
   -- Or use telescope!
