@@ -6,6 +6,7 @@ return {
     -- used for completion, annotations and signatures of Neovim apis
     'folke/lazydev.nvim',
     ft = 'lua',
+    enabled = vim.fn.has('nvim-0.10') == 1,
     opts = {
       library = {
         -- Load luvit types when the `vim.uv` word is found
@@ -28,7 +29,7 @@ return {
       { 'j-hui/fidget.nvim', opts = {} },
 
       -- Allows extra capabilities provided by blink.cmp
-      'saghen/blink.cmp',
+      { 'saghen/blink.cmp', enabled = vim.fn.has('nvim-0.10') == 1 },
     },
     config = function()
       -- Brief aside: **What is LSP?**

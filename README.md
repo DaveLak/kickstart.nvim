@@ -108,11 +108,10 @@ the current plugin status. Hit `q` to close the window.
 
 #### Read The Friendly Documentation
 
-Read through the `init.lua` file and the files it loads (primarily in the
-`lua/kickstart/` directory) in your configuration folder for more
-information about extending and exploring Neovim. The main `init.lua` provides
-an overview and loads core settings and plugins, which have their configurations
-in `lua/kickstart/core/` and `lua/kickstart/plugins/` respectively.
+Read through the `init.lua` file and the files it loads in your configuration
+folder for more information about extending and exploring Neovim. The main
+`init.lua` provides an overview and loads core settings and plugins, which have
+their configurations in `lua/core/` and `lua/plugins/` respectively.
 This modular structure helps in organizing settings and plugins as your
 configuration grows. The documentation also includes examples of adding
 popularly requested plugins.
@@ -153,26 +152,22 @@ popularly requested plugins.
       However, it now primarily focuses on loading different modules and orchestrating
       the setup of core features and plugins. It's the place to get an overview of
       what's being loaded.
-    * `lua/kickstart/core/`: This directory contains the base Neovim settings, broken
+    * `lua/core/`: This directory contains the base Neovim settings, broken
       down into logical files:
       * `options.lua`: General Neovim options (`vim.o` and `vim.g`).
       * `keymaps.lua`: Core (non-plugin) key mappings.
       * `autocommands.lua`: General (non-plugin) autocommands.
-    * `lua/kickstart/plugins/`: This directory holds the configurations for the
-      plugins that come with Kickstart. Each plugin, or a logical group of related
-      plugins, has its own Lua file (e.g., `telescope.lua`, `lsp.lua`). This makes it
-      easier to find and manage plugin settings.
-    * `lua/custom/plugins/`: This directory is the recommended place for *you* to
-      add your own unique plugins and their configurations. Kickstart can be configured
-      to automatically load Lua files from this directory (see the `import = 'custom.plugins'`
-      line in `init.lua`'s `lazy.setup` call). This keeps your personalizations separate
-      from the base Kickstart configuration, making updates easier.
+    * `lua/plugins/`: This directory holds the plugin configurations. Each plugin,
+      or a logical group of related plugins, lives in its own Lua file (e.g.,
+      `telescope.lua`, `lsp.lua`). Kickstart can be configured to automatically
+      load all files from here using the `import = 'plugins'` option in
+      `init.lua`'s `lazy.setup` call.
   * This modular approach makes it easier to understand, manage, and extend your
     Neovim setup. You can easily find where specific settings or plugin configurations
     are located.
 * How do I add a new plugin?
   * **For personal use (recommended for most users):**
-    1. Create a new Lua file in the `lua/custom/plugins/` directory (e.g., `lua/custom/plugins/my-new-plugin.lua`).
+    1. Create a new Lua file in the `lua/plugins/` directory (e.g., `lua/plugins/my-new-plugin.lua`).
     2. In this file, return the plugin specification as required by `lazy.nvim`. For example:
        ```lua
        return {
@@ -181,22 +176,22 @@ popularly requested plugins.
          opts = {},
        }
        ```
-    3. If you've uncommented the `{ import = 'custom.plugins' }` line in `init.lua`'s
+    3. If you've uncommented the `{ import = 'plugins' }` line in `init.lua`'s
        `lazy.setup` call, `lazy.nvim` will automatically pick up and load your new plugin
-       file from `lua/custom/plugins/`.
+       file from `lua/plugins/`.
     4. If you prefer to load plugins explicitly, you can `require` your new plugin
        configuration directly within the `plugins` table in `init.lua`'s `lazy.setup` call:
        ```lua
        -- In init.lua, inside the lazy.setup plugins table:
-       require('custom.plugins.my-new-plugin'),
+       require('plugins.my-new-plugin'),
        ```
   * **To suggest a plugin for Kickstart itself (core plugins):**
-    1. Create a new Lua file in `lua/kickstart/plugins/` (e.g., `lua/kickstart/plugins/new-core-plugin.lua`).
+    1. Create a new Lua file in `lua/plugins/` (e.g., `lua/plugins/new-core-plugin.lua`).
     2. Add the plugin specification in this file, similar to the example above.
     3. Then, add a `require` call for this new file in the main `init.lua` within the `lazy.setup` plugins table:
        ```lua
        -- In init.lua, inside the lazy.setup plugins table:
-       require('kickstart.plugins.new-core-plugin'),
+       require('plugins.new-core-plugin'),
        ```
     (This is typically for contributions back to the Kickstart project).
 ### Install Recipes
