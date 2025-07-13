@@ -26,16 +26,16 @@ What is Kickstart?
 
   Kickstart.nvim is a starting point for your own configuration.
     The goal is that you can read this `init.lua` file, and then explore the files
-    it loads in `lua/kickstart/` to understand what your configuration is doing,
+    it loads in `lua/` to understand what your configuration is doing,
     and how to modify it to suit your needs.
 
     Kickstart.nvim is now structured modularly:
       - `init.lua`: This file, the main entry point. It handles basic setup and
         loads core settings and plugins.
-      - `lua/kickstart/core/`: Contains base Neovim configurations for options,
+      - `lua/core/`: Contains base Neovim configurations for options,
         keymaps, and autocommands.
-      - `lua/kickstart/plugins/`: Contains configurations for each plugin.
-      - `lua/custom/plugins/`: The recommended place for your personal plugin
+      - `lua/plugins/`: Contains configurations for each plugin.
+      - `lua/plugins/`: The recommended place for your personal plugin
         configurations.
 
     Once you've familiarized yourself with this structure, you can start
@@ -63,7 +63,7 @@ Kickstart Guide:
     (If you already know the Neovim basics, you can skip this step.)
 
   Once you've completed that, you can continue working through **AND READING** this
-  `init.lua` file and the files it loads (primarily in `lua/kickstart/`).
+  `init.lua` file and the files it loads (primarily the modules under `lua/`).
 
   Next, run AND READ `:help`.
     This will open up a help window with some basic information
@@ -76,7 +76,7 @@ Kickstart Guide:
     which is very useful when you're not exactly sure of what you're looking for.
 
   I have left several `:help X` comments throughout this `init.lua` file and the
-  files in `lua/kickstart/`. These are hints about where to find more information
+  files in `lua/`. These are hints about where to find more information
   about the relevant settings, plugins or Neovim features used in Kickstart.
 
    NOTE: Look for lines like this (i.e. `NOTE:`)
@@ -95,19 +95,19 @@ P.S. You can delete this when you're done too. It's your config now! :)
 --]]
 
 -- Load core configuration modules
--- Each file in `lua/kickstart/core/` is responsible for a specific set of settings.
+-- Each file in `lua/core/` is responsible for a specific set of settings.
 -- For example, `options.lua` sets Neovim options, `keymaps.lua` defines core keybindings.
 
 -- Load core Neovim settings (options, globals)
 -- NOTE: `options.lua` must be loaded first to ensure `vim.g.mapleader` is set
 -- before other modules or plugins try to use it.
-require 'kickstart.core.options'
+require 'core.options'
 
 -- Load basic keymaps
-require 'kickstart.core.keymaps'
+require 'core.keymaps'
 
 -- Load basic autocommands
-require 'kickstart.core.autocommands'
+require 'core.autocommands'
 
 -- [[ Install `lazy.nvim` plugin manager ]]
 --    See `:help lazy.nvim.txt` or https://github.com/folke/lazy.nvim for more info
@@ -138,29 +138,29 @@ rtp:prepend(lazypath)
 --  Kickstart uses `lazy.nvim` (https://github.com/folke/lazy.nvim) as a plugin manager.
 --  You can learn more about managing plugins with `lazy.nvim` by reading its documentation.
 --
---  The lines below are requiring plugin configuration files from the `lua/kickstart/plugins/` directory.
+--  The lines below are requiring plugin configuration files from the `lua/plugins/` directory.
 --  Each file in that directory returns a table that conforms to `lazy.nvim`'s plugin specification.
 --  See `:help lazy.nvim-plugin-spec` for more details.
 --
---  If you want to add your own plugins, the easiest way is to create a new file in `lua/custom/plugins/`
---  (e.g., `lua/custom/plugins/my-plugin.lua`) and add your plugin specification there.
---  Then, you can uncomment the `{ import = 'custom.plugins' }` line below.
---  This will automatically load all files from `lua/custom/plugins/*.lua` and `lua/custom/plugins/*.init.lua`.
+--  If you want to add your own plugins, the easiest way is to create a new file in `lua/plugins/`
+--  (e.g., `lua/plugins/my-plugin.lua`) and add your plugin specification there.
+--  Then, you can uncomment the `{ import = 'plugins' }` line below.
+--  This will automatically load all files from `lua/plugins/*.lua` and `lua/plugins/*.init.lua`.
 --
 --  If you prefer, you can also add your plugin specifications directly in this `lazy.setup` call.
 require('lazy').setup({
-  -- Load plugin configurations from individual files in `lua/kickstart/plugins/`
-  require 'kickstart.plugins.guess-indent', -- Detects indentation settings automatically
-  require 'kickstart.plugins.gitsigns', -- Adds git related signs to the gutter
-  require 'kickstart.plugins.which-key', -- Shows pending keybinds
-  require 'kickstart.plugins.telescope', -- Fuzzy finder
-  require 'kickstart.plugins.lsp', -- Language Server Protocol configurations
-  require 'kickstart.plugins.conform', -- Auto-formatting
-  require 'kickstart.plugins.completion', -- Autocompletion setup
-  require 'kickstart.plugins.colorscheme', -- The colorscheme (tokyonight)
-  require 'kickstart.plugins.todo-comments', -- Highlights TODO, FIXME, etc.
-  require 'kickstart.plugins.mini', -- Collection of minimal Lua plugins
-  require 'kickstart.plugins.treesitter', -- Treesitter configuration for syntax highlighting, etc.
+  -- Load plugin configurations from individual files in `lua/plugins/`
+  require 'plugins.guess-indent', -- Detects indentation settings automatically
+  require 'plugins.gitsigns', -- Adds git related signs to the gutter
+  require 'plugins.which-key', -- Shows pending keybinds
+  require 'plugins.telescope', -- Fuzzy finder
+  require 'plugins.lsp', -- Language Server Protocol configurations
+  require 'plugins.conform', -- Auto-formatting
+  require 'plugins.completion', -- Autocompletion setup
+  require 'plugins.colorscheme', -- The colorscheme (tokyonight)
+  require 'plugins.todo-comments', -- Highlights TODO, FIXME, etc.
+  require 'plugins.mini', -- Collection of minimal Lua plugins
+  require 'plugins.treesitter', -- Treesitter configuration for syntax highlighting, etc.
 
   -- The following comments only work if you have downloaded the kickstart repo, not just copy pasted this
   -- init.lua file. If you want these files, they are in the repository, so you can just download them and
@@ -169,22 +169,22 @@ require('lazy').setup({
   -- NOTE: Next step on your Neovim journey: Add/Configure additional plugins for Kickstart
   --
   --  Here are some example plugins that I've included in the Kickstart repository but are disabled by default.
-  --  Uncomment any of the lines below to enable them. Your configurations should be placed in `lua/custom/plugins/`.
+  --  Uncomment any of the lines below to enable them. Your configurations should be placed in `lua/plugins/`.
   --  See the README for more information on how to add plugins.
   --
-  -- require 'kickstart.plugins.debug',
-  require 'kickstart.plugins.indent_line',
-  require 'kickstart.plugins.lint',
-  -- require 'kickstart.plugins.autopairs',
-  require 'kickstart.plugins.neo-tree',
-  require 'kickstart.plugins.gitsigns', -- For more gitsigns configuration, see `lua/kickstart/plugins/gitsigns.lua`
+  -- require 'plugins.debug',
+  require 'plugins.indent_line',
+  require 'plugins.lint',
+  -- require 'plugins.autopairs',
+  require 'plugins.neo-tree',
+  require 'plugins.gitsigns', -- For more gitsigns configuration, see `lua/plugins/gitsigns.lua`
 
-  -- NOTE: The import below can automatically add your own plugins, configuration, etc., from `lua/custom/plugins/*.lua`
+  -- NOTE: The import below can automatically add your own plugins, configuration, etc., from `lua/plugins/*.lua`
   --    This is the easiest way to modularize your personal config.
   --
-  --  Uncomment the following line and add your plugins to `lua/custom/plugins/*.lua` to get going.
-  --    For example, create a file `lua/custom/plugins/foo.lua` and add plugin specs to that file.
-  { import = 'custom.plugins' },
+  --  Uncomment the following line and add your plugins to `lua/plugins/*.lua` to get going.
+  --    For example, create a file `lua/plugins/foo.lua` and add plugin specs to that file.
+  { import = 'plugins' },
   --
   -- For additional information with loading, sourcing and examples see `:help lazy.nvim-lazy.nvim-plugin-spec`
   -- Or use telescope!

@@ -1,6 +1,7 @@
 -- Configures autocompletion using blink.cmp and its related plugins.
 return {
   'saghen/blink.cmp',
+  enabled = vim.fn.has('nvim-0.10') == 1,
   event = 'VimEnter',
   version = '1.*',
   dependencies = {
